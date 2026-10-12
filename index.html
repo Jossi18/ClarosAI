@@ -12,6 +12,24 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://claros-ai.vercel.app/">
+<link rel="alternate" hreflang="fr" href="https://claros-ai.vercel.app/">
+<link rel="alternate" hreflang="en" href="https://claros-ai.vercel.app/en">
+<link rel="alternate" hreflang="x-default" href="https://claros-ai.vercel.app/">
+<meta property="og:locale" content="fr_FR">
+<script>
+  /* Language: send non-French visitors (or anyone who picked English) to /en, unless they chose French. */
+  (function () {
+    try {
+      if (document.documentElement.lang !== 'fr') return;
+      if (/bot|crawl|spider|slurp|lighthouse|preview/i.test(navigator.userAgent)) return;
+      var pref = localStorage.getItem('claros-lang');
+      var langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
+      var french = langs.some(function (l) { return /^fr/i.test(l); });
+      if (pref === 'en' || (!pref && !french)) location.replace('/en' + location.hash);
+    } catch (e) {}
+  })();
+</script>
 <title>Claros AI · Agents IA sur mesure pour PME</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -153,6 +171,12 @@
   .pill-line:hover { border-color: var(--text); }
   .pill-sm { padding: 7px 14px; font-size: 13px; }
   @media (max-width: 960px) { .nav-links { display: none; } }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .lang-sw { display: inline-flex; padding: 3px; border-radius: 980px; border: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 60%, transparent); }
+  .lang-sw a { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-decoration: none; color: var(--dim); padding: 4px 9px; border-radius: 980px; transition: color .2s, background .2s; }
+  .lang-sw a:hover { color: var(--text); }
+  .lang-sw a[aria-current="page"] { background: var(--text); color: var(--bg); }
+  .lang-sw a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
   /* ---------- Hero ---------- */
   .hero-band { position: relative; overflow: hidden; isolation: isolate; margin-top: -57px; padding-top: 57px; }
@@ -749,7 +773,13 @@
       <a href="#a-propos">À propos</a>
       <a href="#faq">FAQ</a>
     </div>
-    <a href="#contact" class="pill pill-solid pill-sm">Réserver un appel</a>
+    <div class="nav-right">
+      <div class="lang-sw" role="group" aria-label="Langue">
+        <a href="/" lang="fr" hreflang="fr" data-lang="fr" aria-current="page">FR</a>
+        <a href="/en" lang="en" hreflang="en" data-lang="en">EN</a>
+      </div>
+      <a href="#contact" class="pill pill-solid pill-sm">Réserver un appel</a>
+    </div>
   </div>
 </nav>
 
@@ -1622,6 +1652,11 @@
       Object.keys(map).forEach(function (id) { io.observe(document.getElementById(id)); });
     }
   })();
+
+  // ---- Language switch: remember the visitor's choice ----
+  document.querySelectorAll('.lang-sw a[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('claros-lang', a.getAttribute('data-lang')); } catch (e) {} });
+  });
 
   // ---- Copy buttons ----
   document.querySelectorAll('.copy').forEach(function (b) {
